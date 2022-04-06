@@ -1,0 +1,14 @@
+{
+  "name": "kakts/wordle-solver",
+  "version": "0.0.1",
+  "description": "Wordle solver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wordle"
+  ],
+  "author": "kakts",
+  "license": "ISC"
+}
