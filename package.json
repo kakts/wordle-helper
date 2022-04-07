@@ -1,14 +1,20 @@
 {
-  "name": "kakts/wordle-solver",
+  "name": "wordle-helper",
   "version": "0.0.1",
-  "description": "Wordle solver",
+  "description": "A Command-Line tool for solving Wordle.",
+  "repository": "kakts/wordle-helper",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "mocha test"
   },
   "keywords": [
     "wordle"
   ],
   "author": "kakts",
-  "license": "ISC"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^9.2.2",
+    "power-assert": "^1.6.1"
+  }
 }
