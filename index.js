@@ -2,7 +2,7 @@ const readline = require('readline');
 const { stdin, stdout} = require('process');
 
 const util = require('./lib/util');
-const {checkAnswer, checkAnswerList} = require('./lib/checker');
+const {checkStrLength, checkAnswerList} = require('./lib/checker');
 
 const { exec } = require('child_process');
 
@@ -45,7 +45,6 @@ function getCandidatesWords(condition) {
             console.error(`stderr: ${stderr}`);
             return;
         }
-        console.log('-------', stdout);
         return stdout
     });
 }
@@ -55,8 +54,7 @@ async function main() {
         let isValid = false
         while (!isValid) {
             const ans = await ask(`TRY ${i}: please input your answer.`);
-            console.log('---', ans);
-            if (!checkAnswer(ans)) {
+            if (!checkStrLength(ans)) {
                 console.log("Answer validation failed. answer length should be 5.")
                 continue;
             }
@@ -64,10 +62,9 @@ async function main() {
             
             // wordleからの答えを入力
             const hitList = await ask(`Please input hit list. +-. e.g ANSWER(diary). YOUR_INPUT(dieyl) -> input ++.-.`);
-            console.log("---------hitList", hitList)
             console.log(checkAnswerList(hitList))
             if (!checkAnswerList(hitList)) {
-                console.log("ちゃんと回答して");
+                console.error(`[checkAnswerList] hitList is invalid. ${hitList}`);
                 contiune;
             }
             // TODO 文字列がアルファベットのみ(a-z)を使っているかをチェック
