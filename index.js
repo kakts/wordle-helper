@@ -36,7 +36,7 @@ function setCharUsedMap(answer, hitList, charUsedMap) {
 }
 
 async function main() {
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
         let isValid = false
         while (!isValid) {
             const ans = await ask(`TRY ${i}: please input your answer.\nanswer: `);
