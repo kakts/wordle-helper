@@ -10,6 +10,7 @@ const { makeGrepCondition, getCandidatesWords } = require('./lib/search');
 
 let tryCount = 0;
 
+const correctAnswerArr = [];
 
 
 function ask(query) {
@@ -26,13 +27,40 @@ console.log('============================');
 console.log('Wordle Solver!.');
 console.log('============================\n');
 
-function setCharUsedMap(answer, hitList, charUsedMap) {
+function setCharUsedMap(answer, hitList, charUsedMap, correctAnswerArr) {
+    const duplicateCharMap = {}
     for (let i = 0, len = hitList.length; i < len; i++) {
+        const hitChar = hitList[i];
+        const answerChar = answer[i];
+        const usedMap = charUsedMap[answerChar];
+        duplicateCharMap[answer[i]] = duplicateCharMap[answerChar] || {
+            isUsedForAnswer: false // set true if hitListChar is + or -
+        }
         // set false to the UsedFlag.
-        if (hitList[i] === '.') {
-            charUsedMap[answer[i]] = false;
+        switch (hitChar) {
+            case '.':
+                // set false because this character is not used for answer.
+                usedMap.isCandidate = false;
+                break;
+            case '-':
+                // set false to candidatePosition index i.
+                usedMap.candidatePosition[i] = false;
+                duplicateCharMap[answerChar].isUsedForAnswer = true;
+
+                break;
+            case '+':
+                correctAnswerArr[i] = answerChar
+                duplicateCharMap[answerChar].isUsedForAnswer = true;
+                break;
         }
     }
+    console.log("---", charUsedMap)
+    for (let key in duplicateCharMap) {
+        console.log("----", key, charUsedMap[key])
+        charUsedMap[key].isCandidate = duplicateCharMap[key].isUsedForAnswer;
+    }
+    console.debug(charUsedMap);
+    console.log(correctAnswerArr)
 }
 
 async function main() {
@@ -51,17 +79,17 @@ async function main() {
             console.log(checkAnswerList(hitList))
             if (!checkAnswerList(hitList)) {
                 console.error(`[checkAnswerList] hitList is invalid. ${hitList}`);
-                contiune;
+                continue;
             }
             // TODO 文字列がアルファベットのみ(a-z)を使っているかをチェック
 
-            setCharUsedMap(ans, hitList, charUsedMap);
+            setCharUsedMap(ans, hitList, charUsedMap, correctAnswerArr);
             console.log()
             // 検索条件
             const grepConditionStr = makeGrepCondition(ans, hitList);
             // TODO 辞書を検索
-            const a = getCandidatesWords(grepConditionStr, charUsedMap);
-            console.log(`words: ${a}`);
+            const candidateWordList = getCandidatesWords(grepConditionStr, charUsedMap, correctAnswerArr);
+            console.log(`words: ${candidateWordList}`);
 
 
             isValid = true;
